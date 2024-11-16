@@ -8,5 +8,5 @@ elif [ "$1" = "build" ]; then
   cmake --build build --parallel$(nproc)
 else
   export QT_QPA_PLATFORM="xcb"
-  gamescope -W 1980 -H 1080 -r 60 -F fsr ./build/shadps4 /home/spandan/PS4Games/CUSA03173/eboot.bin
+  gamescope -w 792 -h 432 -W 1980 -H 1080 -r 60 -F nis ./build/shadps4 /home/spandan/PS4Games/CUSA03173/eboot.bin
 fi

@@ -8,6 +8,7 @@
 #include <mutex>
 #include <semaphore>
 #include <shared_mutex>
+#include <atomic>
 
 #include "common/enum.h"
 #include "core/libraries/kernel/time.h"
@@ -212,6 +213,8 @@ enum class PthreadOnceState : u32 {
     InProgress = 2,
     Wait = 3,
 };
+
+struct PthreadOnce;
 
 struct PthreadOnce {
     std::atomic<PthreadOnceState> state;
