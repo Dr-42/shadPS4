@@ -4,7 +4,7 @@ export DISPLAY=:0
 if [ "$1" = "run" ]; then
   ./build/shadps4
 elif [ "$1" = "build" ]; then
-  cmake -S . -B build/ -DENABLE_QT_GUI=ON
+  #cmake -S . -B build/ -DENABLE_QT_GUI=ON
   cmake --build build --parallel$(nproc)
 else
   export QT_QPA_PLATFORM="xcb"

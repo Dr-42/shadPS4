@@ -7,6 +7,7 @@
 #include <vector>
 #include "common/assert.h"
 #include "common/func_traits.h"
+#include "common/logging/log.h"
 #include "shader_recompiler/backend/spirv/emit_spirv.h"
 #include "shader_recompiler/backend/spirv/emit_spirv_instructions.h"
 #include "shader_recompiler/backend/spirv/spirv_emit_context.h"
@@ -346,7 +347,8 @@ std::vector<u32> EmitSPIRV(const Profile& profile, const RuntimeInfo& runtime_in
     SetupFloatMode(ctx, profile, runtime_info, main);
     PatchPhiNodes(program, ctx);
     binding.user_data += program.info.ud_mask.NumRegs();
-    return ctx.Assemble();
+    auto res = ctx.Assemble();
+    return res;
 }
 
 Id EmitPhi(EmitContext& ctx, IR::Inst* inst) {

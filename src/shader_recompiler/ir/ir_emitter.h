@@ -327,7 +327,7 @@ private:
     IR::Block::iterator insertion_point;
 
     template <typename T = Value, typename... Args>
-    T Inst(Opcode op, Args... args) {
+    T CreateInst(Opcode op, Args... args) {
         auto it{block->PrependNewInst(insertion_point, op, {Value{args}...})};
         return T{Value{&*it}};
     }
@@ -342,7 +342,7 @@ private:
     };
 
     template <typename T = Value, typename FlagType, typename... Args>
-    T Inst(Opcode op, Flags<FlagType> flags, Args... args) {
+    T CreateInst(Opcode op, Flags<FlagType> flags, Args... args) {
         u32 raw_flags{};
         std::memcpy(&raw_flags, &flags.proxy, sizeof(flags.proxy));
         auto it{block->PrependNewInst(insertion_point, op, {Value{args}...}, raw_flags)};

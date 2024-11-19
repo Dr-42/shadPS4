@@ -61,93 +61,93 @@ F64 IREmitter::Imm64(f64 value) const {
 
 template <>
 IR::U32 IREmitter::BitCast<IR::U32, IR::F32>(const IR::F32& value) {
-    return Inst<IR::U32>(Opcode::BitCastU32F32, value);
+    return CreateInst<IR::U32>(Opcode::BitCastU32F32, value);
 }
 
 template <>
 IR::F32 IREmitter::BitCast<IR::F32, IR::U32>(const IR::U32& value) {
-    return Inst<IR::F32>(Opcode::BitCastF32U32, value);
+    return CreateInst<IR::F32>(Opcode::BitCastF32U32, value);
 }
 
 template <>
 IR::U16 IREmitter::BitCast<IR::U16, IR::F16>(const IR::F16& value) {
-    return Inst<IR::U16>(Opcode::BitCastU16F16, value);
+    return CreateInst<IR::U16>(Opcode::BitCastU16F16, value);
 }
 
 template <>
 IR::F16 IREmitter::BitCast<IR::F16, IR::U16>(const IR::U16& value) {
-    return Inst<IR::F16>(Opcode::BitCastF16U16, value);
+    return CreateInst<IR::F16>(Opcode::BitCastF16U16, value);
 }
 
 template <>
 IR::U64 IREmitter::BitCast<IR::U64, IR::F64>(const IR::F64& value) {
-    return Inst<IR::U64>(Opcode::BitCastU64F64, value);
+    return CreateInst<IR::U64>(Opcode::BitCastU64F64, value);
 }
 
 template <>
 IR::F64 IREmitter::BitCast<IR::F64, IR::U64>(const IR::U64& value) {
-    return Inst<IR::F64>(Opcode::BitCastF64U64, value);
+    return CreateInst<IR::F64>(Opcode::BitCastF64U64, value);
 }
 
 U1 IREmitter::ConditionRef(const U1& value) {
-    return Inst<U1>(Opcode::ConditionRef, value);
+    return CreateInst<U1>(Opcode::ConditionRef, value);
 }
 
 void IREmitter::Reference(const Value& value) {
-    Inst(Opcode::Reference, value);
+    CreateInst(Opcode::Reference, value);
 }
 
 void IREmitter::PhiMove(IR::Inst& phi, const Value& value) {
-    Inst(Opcode::PhiMove, Value{&phi}, value);
+    CreateInst(Opcode::PhiMove, Value{&phi}, value);
 }
 
 void IREmitter::Prologue() {
-    Inst(Opcode::Prologue);
+    CreateInst(Opcode::Prologue);
 }
 
 void IREmitter::Epilogue() {
-    Inst(Opcode::Epilogue);
+    CreateInst(Opcode::Epilogue);
 }
 
 void IREmitter::Discard() {
-    Inst(Opcode::Discard);
+    CreateInst(Opcode::Discard);
 }
 
 void IREmitter::Discard(const U1& cond) {
-    Inst(Opcode::DiscardCond, cond);
+    CreateInst(Opcode::DiscardCond, cond);
 }
 
 void IREmitter::Barrier() {
-    Inst(Opcode::Barrier);
+    CreateInst(Opcode::Barrier);
 }
 
 void IREmitter::WorkgroupMemoryBarrier() {
-    Inst(Opcode::WorkgroupMemoryBarrier);
+    CreateInst(Opcode::WorkgroupMemoryBarrier);
 }
 
 void IREmitter::DeviceMemoryBarrier() {
-    Inst(Opcode::DeviceMemoryBarrier);
+    CreateInst(Opcode::DeviceMemoryBarrier);
 }
 
 U32 IREmitter::GetUserData(IR::ScalarReg reg) {
     ASSERT(static_cast<u32>(reg) < IR::NumScalarRegs);
-    return Inst<U32>(Opcode::GetUserData, reg);
+    return CreateInst<U32>(Opcode::GetUserData, reg);
 }
 
 U1 IREmitter::GetThreadBitScalarReg(IR::ScalarReg reg) {
     ASSERT(static_cast<u32>(reg) < IR::NumScalarRegs);
-    return Inst<U1>(Opcode::GetThreadBitScalarReg, reg);
+    return CreateInst<U1>(Opcode::GetThreadBitScalarReg, reg);
 }
 
 void IREmitter::SetThreadBitScalarReg(IR::ScalarReg reg, const U1& value) {
     ASSERT(static_cast<u32>(reg) < IR::NumScalarRegs);
-    Inst(Opcode::SetThreadBitScalarReg, reg, value);
+    CreateInst(Opcode::SetThreadBitScalarReg, reg, value);
 }
 
 template <>
 U32 IREmitter::GetScalarReg(IR::ScalarReg reg) {
     ASSERT(static_cast<u32>(reg) < IR::NumScalarRegs);
-    return Inst<U32>(Opcode::GetScalarRegister, reg);
+    return CreateInst<U32>(Opcode::GetScalarRegister, reg);
 }
 
 template <>
@@ -158,7 +158,7 @@ F32 IREmitter::GetScalarReg(IR::ScalarReg reg) {
 template <>
 U32 IREmitter::GetVectorReg(IR::VectorReg reg) {
     ASSERT(static_cast<u32>(reg) < IR::NumVectorRegs);
-    return Inst<U32>(Opcode::GetVectorRegister, reg);
+    return CreateInst<U32>(Opcode::GetVectorRegister, reg);
 }
 
 template <>
@@ -169,17 +169,17 @@ F32 IREmitter::GetVectorReg(IR::VectorReg reg) {
 void IREmitter::SetScalarReg(IR::ScalarReg reg, const U32F32& value) {
     ASSERT(static_cast<u32>(reg) < IR::NumScalarRegs);
     const U32 value_typed = value.Type() == Type::F32 ? BitCast<U32>(F32{value}) : U32{value};
-    Inst(Opcode::SetScalarRegister, reg, value_typed);
+    CreateInst(Opcode::SetScalarRegister, reg, value_typed);
 }
 
 void IREmitter::SetVectorReg(IR::VectorReg reg, const U32F32& value) {
     ASSERT(static_cast<u32>(reg) < IR::NumVectorRegs);
     const U32 value_typed = value.Type() == Type::F32 ? BitCast<U32>(F32{value}) : U32{value};
-    Inst(Opcode::SetVectorRegister, reg, value_typed);
+    CreateInst(Opcode::SetVectorRegister, reg, value_typed);
 }
 
 U1 IREmitter::GetGotoVariable(u32 id) {
-    return Inst<U1>(Opcode::GetGotoVariable, id);
+    return CreateInst<U1>(Opcode::GetGotoVariable, id);
 }
 
 U1 IREmitter::Condition(IR::Condition cond) {
@@ -206,81 +206,81 @@ U1 IREmitter::Condition(IR::Condition cond) {
 }
 
 void IREmitter::SetGotoVariable(u32 id, const U1& value) {
-    Inst(Opcode::SetGotoVariable, id, value);
+    CreateInst(Opcode::SetGotoVariable, id, value);
 }
 
 U1 IREmitter::GetScc() {
-    return Inst<U1>(Opcode::GetScc);
+    return CreateInst<U1>(Opcode::GetScc);
 }
 
 U1 IREmitter::GetExec() {
-    return Inst<U1>(Opcode::GetExec);
+    return CreateInst<U1>(Opcode::GetExec);
 }
 
 U1 IREmitter::GetVcc() {
-    return Inst<U1>(Opcode::GetVcc);
+    return CreateInst<U1>(Opcode::GetVcc);
 }
 
 U32 IREmitter::GetVccLo() {
-    return Inst<U32>(Opcode::GetVccLo);
+    return CreateInst<U32>(Opcode::GetVccLo);
 }
 
 U32 IREmitter::GetVccHi() {
-    return Inst<U32>(Opcode::GetVccHi);
+    return CreateInst<U32>(Opcode::GetVccHi);
 }
 
 U32 IREmitter::GetM0() {
-    return Inst<U32>(Opcode::GetM0);
+    return CreateInst<U32>(Opcode::GetM0);
 }
 
 void IREmitter::SetScc(const U1& value) {
-    Inst(Opcode::SetScc, value);
+    CreateInst(Opcode::SetScc, value);
 }
 
 void IREmitter::SetExec(const U1& value) {
-    Inst(Opcode::SetExec, value);
+    CreateInst(Opcode::SetExec, value);
 }
 
 void IREmitter::SetVcc(const U1& value) {
-    Inst(Opcode::SetVcc, value);
+    CreateInst(Opcode::SetVcc, value);
 }
 
 void IREmitter::SetSccLo(const U32& value) {
-    Inst(Opcode::SetSccLo, value);
+    CreateInst(Opcode::SetSccLo, value);
 }
 
 void IREmitter::SetVccLo(const U32& value) {
-    Inst(Opcode::SetVccLo, value);
+    CreateInst(Opcode::SetVccLo, value);
 }
 
 void IREmitter::SetVccHi(const U32& value) {
-    Inst(Opcode::SetVccHi, value);
+    CreateInst(Opcode::SetVccHi, value);
 }
 
 void IREmitter::SetM0(const U32& value) {
-    Inst(Opcode::SetM0, value);
+    CreateInst(Opcode::SetM0, value);
 }
 
 F32 IREmitter::GetAttribute(IR::Attribute attribute, u32 comp, u32 index) {
-    return Inst<F32>(Opcode::GetAttribute, attribute, Imm32(comp), Imm32(index));
+    return CreateInst<F32>(Opcode::GetAttribute, attribute, Imm32(comp), Imm32(index));
 }
 
 U32 IREmitter::GetAttributeU32(IR::Attribute attribute, u32 comp) {
-    return Inst<U32>(Opcode::GetAttributeU32, attribute, Imm32(comp));
+    return CreateInst<U32>(Opcode::GetAttributeU32, attribute, Imm32(comp));
 }
 
 void IREmitter::SetAttribute(IR::Attribute attribute, const F32& value, u32 comp) {
-    Inst(Opcode::SetAttribute, attribute, value, Imm32(comp));
+    CreateInst(Opcode::SetAttribute, attribute, value, Imm32(comp));
 }
 
 Value IREmitter::LoadShared(int bit_size, bool is_signed, const U32& offset) {
     switch (bit_size) {
     case 32:
-        return Inst<U32>(Opcode::LoadSharedU32, offset);
+        return CreateInst<U32>(Opcode::LoadSharedU32, offset);
     case 64:
-        return Inst(Opcode::LoadSharedU64, offset);
+        return CreateInst(Opcode::LoadSharedU64, offset);
     case 128:
-        return Inst(Opcode::LoadSharedU128, offset);
+        return CreateInst(Opcode::LoadSharedU128, offset);
     default:
         UNREACHABLE_MSG("Invalid bit size {}", bit_size);
     }
@@ -289,13 +289,13 @@ Value IREmitter::LoadShared(int bit_size, bool is_signed, const U32& offset) {
 void IREmitter::WriteShared(int bit_size, const Value& value, const U32& offset) {
     switch (bit_size) {
     case 32:
-        Inst(Opcode::WriteSharedU32, offset, value);
+        CreateInst(Opcode::WriteSharedU32, offset, value);
         break;
     case 64:
-        Inst(Opcode::WriteSharedU64, offset, value);
+        CreateInst(Opcode::WriteSharedU64, offset, value);
         break;
     case 128:
-        Inst(Opcode::WriteSharedU128, offset, value);
+        CreateInst(Opcode::WriteSharedU128, offset, value);
         break;
     default:
         UNREACHABLE_MSG("Invalid bit size {}", bit_size);
@@ -305,64 +305,64 @@ void IREmitter::WriteShared(int bit_size, const Value& value, const U32& offset)
 U32F32 IREmitter::SharedAtomicIAdd(const U32& address, const U32F32& data) {
     switch (data.Type()) {
     case Type::U32:
-        return Inst<U32>(Opcode::SharedAtomicIAdd32, address, data);
+        return CreateInst<U32>(Opcode::SharedAtomicIAdd32, address, data);
     default:
         ThrowInvalidType(data.Type());
     }
 }
 
 U32 IREmitter::SharedAtomicIMin(const U32& address, const U32& data, bool is_signed) {
-    return is_signed ? Inst<U32>(Opcode::SharedAtomicSMin32, address, data)
-                     : Inst<U32>(Opcode::SharedAtomicUMin32, address, data);
+    return is_signed ? CreateInst<U32>(Opcode::SharedAtomicSMin32, address, data)
+                     : CreateInst<U32>(Opcode::SharedAtomicUMin32, address, data);
 }
 
 U32 IREmitter::SharedAtomicIMax(const U32& address, const U32& data, bool is_signed) {
-    return is_signed ? Inst<U32>(Opcode::SharedAtomicSMax32, address, data)
-                     : Inst<U32>(Opcode::SharedAtomicUMax32, address, data);
+    return is_signed ? CreateInst<U32>(Opcode::SharedAtomicSMax32, address, data)
+                     : CreateInst<U32>(Opcode::SharedAtomicUMax32, address, data);
 }
 
 U32 IREmitter::ReadConst(const Value& base, const U32& offset) {
-    return Inst<U32>(Opcode::ReadConst, base, offset);
+    return CreateInst<U32>(Opcode::ReadConst, base, offset);
 }
 
 U32 IREmitter::ReadConstBuffer(const Value& handle, const U32& index) {
-    return Inst<U32>(Opcode::ReadConstBuffer, handle, index);
+    return CreateInst<U32>(Opcode::ReadConstBuffer, handle, index);
 }
 
 Value IREmitter::LoadBuffer(int num_dwords, const Value& handle, const Value& address,
                             BufferInstInfo info) {
     switch (num_dwords) {
     case 1:
-        return Inst(Opcode::LoadBufferU32, Flags{info}, handle, address);
+        return CreateInst(Opcode::LoadBufferU32, Flags{info}, handle, address);
     case 2:
-        return Inst(Opcode::LoadBufferU32x2, Flags{info}, handle, address);
+        return CreateInst(Opcode::LoadBufferU32x2, Flags{info}, handle, address);
     case 3:
-        return Inst(Opcode::LoadBufferU32x3, Flags{info}, handle, address);
+        return CreateInst(Opcode::LoadBufferU32x3, Flags{info}, handle, address);
     case 4:
-        return Inst(Opcode::LoadBufferU32x4, Flags{info}, handle, address);
+        return CreateInst(Opcode::LoadBufferU32x4, Flags{info}, handle, address);
     default:
         UNREACHABLE_MSG("Invalid number of dwords {}", num_dwords);
     }
 }
 
 Value IREmitter::LoadBufferFormat(const Value& handle, const Value& address, BufferInstInfo info) {
-    return Inst(Opcode::LoadBufferFormatF32, Flags{info}, handle, address);
+    return CreateInst(Opcode::LoadBufferFormatF32, Flags{info}, handle, address);
 }
 
 void IREmitter::StoreBuffer(int num_dwords, const Value& handle, const Value& address,
                             const Value& data, BufferInstInfo info) {
     switch (num_dwords) {
     case 1:
-        Inst(Opcode::StoreBufferU32, Flags{info}, handle, address, data);
+        CreateInst(Opcode::StoreBufferU32, Flags{info}, handle, address, data);
         break;
     case 2:
-        Inst(Opcode::StoreBufferU32x2, Flags{info}, handle, address, data);
+        CreateInst(Opcode::StoreBufferU32x2, Flags{info}, handle, address, data);
         break;
     case 3:
-        Inst(Opcode::StoreBufferU32x3, Flags{info}, handle, address, data);
+        CreateInst(Opcode::StoreBufferU32x3, Flags{info}, handle, address, data);
         break;
     case 4:
-        Inst(Opcode::StoreBufferU32x4, Flags{info}, handle, address, data);
+        CreateInst(Opcode::StoreBufferU32x4, Flags{info}, handle, address, data);
         break;
     default:
         UNREACHABLE_MSG("Invalid number of dwords {}", num_dwords);
@@ -371,86 +371,86 @@ void IREmitter::StoreBuffer(int num_dwords, const Value& handle, const Value& ad
 
 Value IREmitter::BufferAtomicIAdd(const Value& handle, const Value& address, const Value& value,
                                   BufferInstInfo info) {
-    return Inst(Opcode::BufferAtomicIAdd32, Flags{info}, handle, address, value);
+    return CreateInst(Opcode::BufferAtomicIAdd32, Flags{info}, handle, address, value);
 }
 
 Value IREmitter::BufferAtomicIMin(const Value& handle, const Value& address, const Value& value,
                                   bool is_signed, BufferInstInfo info) {
-    return is_signed ? Inst(Opcode::BufferAtomicSMin32, Flags{info}, handle, address, value)
-                     : Inst(Opcode::BufferAtomicUMin32, Flags{info}, handle, address, value);
+    return is_signed ? CreateInst(Opcode::BufferAtomicSMin32, Flags{info}, handle, address, value)
+                     : CreateInst(Opcode::BufferAtomicUMin32, Flags{info}, handle, address, value);
 }
 
 Value IREmitter::BufferAtomicIMax(const Value& handle, const Value& address, const Value& value,
                                   bool is_signed, BufferInstInfo info) {
-    return is_signed ? Inst(Opcode::BufferAtomicSMax32, Flags{info}, handle, address, value)
-                     : Inst(Opcode::BufferAtomicUMax32, Flags{info}, handle, address, value);
+    return is_signed ? CreateInst(Opcode::BufferAtomicSMax32, Flags{info}, handle, address, value)
+                     : CreateInst(Opcode::BufferAtomicUMax32, Flags{info}, handle, address, value);
 }
 
 Value IREmitter::BufferAtomicInc(const Value& handle, const Value& address, const Value& value,
                                  BufferInstInfo info) {
-    return Inst(Opcode::BufferAtomicInc32, Flags{info}, handle, address, value);
+    return CreateInst(Opcode::BufferAtomicInc32, Flags{info}, handle, address, value);
 }
 
 Value IREmitter::BufferAtomicDec(const Value& handle, const Value& address, const Value& value,
                                  BufferInstInfo info) {
-    return Inst(Opcode::BufferAtomicDec32, Flags{info}, handle, address, value);
+    return CreateInst(Opcode::BufferAtomicDec32, Flags{info}, handle, address, value);
 }
 
 Value IREmitter::BufferAtomicAnd(const Value& handle, const Value& address, const Value& value,
                                  BufferInstInfo info) {
-    return Inst(Opcode::BufferAtomicAnd32, Flags{info}, handle, address, value);
+    return CreateInst(Opcode::BufferAtomicAnd32, Flags{info}, handle, address, value);
 }
 
 Value IREmitter::BufferAtomicOr(const Value& handle, const Value& address, const Value& value,
                                 BufferInstInfo info) {
-    return Inst(Opcode::BufferAtomicOr32, Flags{info}, handle, address, value);
+    return CreateInst(Opcode::BufferAtomicOr32, Flags{info}, handle, address, value);
 }
 
 Value IREmitter::BufferAtomicXor(const Value& handle, const Value& address, const Value& value,
                                  BufferInstInfo info) {
-    return Inst(Opcode::BufferAtomicXor32, Flags{info}, handle, address, value);
+    return CreateInst(Opcode::BufferAtomicXor32, Flags{info}, handle, address, value);
 }
 
 Value IREmitter::BufferAtomicSwap(const Value& handle, const Value& address, const Value& value,
                                   BufferInstInfo info) {
-    return Inst(Opcode::BufferAtomicSwap32, Flags{info}, handle, address, value);
+    return CreateInst(Opcode::BufferAtomicSwap32, Flags{info}, handle, address, value);
 }
 
 void IREmitter::StoreBufferFormat(const Value& handle, const Value& address, const Value& data,
                                   BufferInstInfo info) {
-    Inst(Opcode::StoreBufferFormatF32, Flags{info}, handle, address, data);
+    CreateInst(Opcode::StoreBufferFormatF32, Flags{info}, handle, address, data);
 }
 
 U32 IREmitter::DataAppend(const U32& counter) {
-    return Inst<U32>(Opcode::DataAppend, counter, Imm32(0));
+    return CreateInst<U32>(Opcode::DataAppend, counter, Imm32(0));
 }
 
 U32 IREmitter::DataConsume(const U32& counter) {
-    return Inst<U32>(Opcode::DataConsume, counter, Imm32(0));
+    return CreateInst<U32>(Opcode::DataConsume, counter, Imm32(0));
 }
 
 U32 IREmitter::LaneId() {
-    return Inst<U32>(Opcode::LaneId);
+    return CreateInst<U32>(Opcode::LaneId);
 }
 
 U32 IREmitter::WarpId() {
-    return Inst<U32>(Opcode::WarpId);
+    return CreateInst<U32>(Opcode::WarpId);
 }
 
 U32 IREmitter::QuadShuffle(const U32& value, const U32& index) {
-    return Inst<U32>(Opcode::QuadShuffle, value, index);
+    return CreateInst<U32>(Opcode::QuadShuffle, value, index);
 }
 
 U32 IREmitter::ReadFirstLane(const U32& value) {
-    return Inst<U32>(Opcode::ReadFirstLane, value);
+    return CreateInst<U32>(Opcode::ReadFirstLane, value);
 }
 
 U32 IREmitter::ReadLane(const U32& value, const U32& lane) {
-    return Inst<U32>(Opcode::ReadLane, value, lane);
+    return CreateInst<U32>(Opcode::ReadLane, value, lane);
 }
 
 U32 IREmitter::WriteLane(const U32& value, const U32& write_value, const U32& lane) {
-    return Inst<U32>(Opcode::WriteLane, value, write_value, lane);
+    return CreateInst<U32>(Opcode::WriteLane, value, write_value, lane);
 }
 
 F32F64 IREmitter::FPAdd(const F32F64& a, const F32F64& b) {
@@ -459,9 +459,9 @@ F32F64 IREmitter::FPAdd(const F32F64& a, const F32F64& b) {
     }
     switch (a.Type()) {
     case Type::F32:
-        return Inst<F32>(Opcode::FPAdd32, a, b);
+        return CreateInst<F32>(Opcode::FPAdd32, a, b);
     case Type::F64:
-        return Inst<F64>(Opcode::FPAdd64, a, b);
+        return CreateInst<F64>(Opcode::FPAdd64, a, b);
     default:
         ThrowInvalidType(a.Type());
     }
@@ -473,7 +473,7 @@ F32F64 IREmitter::FPSub(const F32F64& a, const F32F64& b) {
     }
     switch (a.Type()) {
     case Type::F32:
-        return Inst<F32>(Opcode::FPSub32, a, b);
+        return CreateInst<F32>(Opcode::FPSub32, a, b);
     default:
         ThrowInvalidType(a.Type());
     }
@@ -485,13 +485,13 @@ Value IREmitter::CompositeConstruct(const Value& e1, const Value& e2) {
     }
     switch (e1.Type()) {
     case Type::U32:
-        return Inst(Opcode::CompositeConstructU32x2, e1, e2);
+        return CreateInst(Opcode::CompositeConstructU32x2, e1, e2);
     case Type::F16:
-        return Inst(Opcode::CompositeConstructF16x2, e1, e2);
+        return CreateInst(Opcode::CompositeConstructF16x2, e1, e2);
     case Type::F32:
-        return Inst(Opcode::CompositeConstructF32x2, e1, e2);
+        return CreateInst(Opcode::CompositeConstructF32x2, e1, e2);
     case Type::F64:
-        return Inst(Opcode::CompositeConstructF64x2, e1, e2);
+        return CreateInst(Opcode::CompositeConstructF64x2, e1, e2);
     default:
         ThrowInvalidType(e1.Type());
     }
@@ -503,13 +503,13 @@ Value IREmitter::CompositeConstruct(const Value& e1, const Value& e2, const Valu
     }
     switch (e1.Type()) {
     case Type::U32:
-        return Inst(Opcode::CompositeConstructU32x3, e1, e2, e3);
+        return CreateInst(Opcode::CompositeConstructU32x3, e1, e2, e3);
     case Type::F16:
-        return Inst(Opcode::CompositeConstructF16x3, e1, e2, e3);
+        return CreateInst(Opcode::CompositeConstructF16x3, e1, e2, e3);
     case Type::F32:
-        return Inst(Opcode::CompositeConstructF32x3, e1, e2, e3);
+        return CreateInst(Opcode::CompositeConstructF32x3, e1, e2, e3);
     case Type::F64:
-        return Inst(Opcode::CompositeConstructF64x3, e1, e2, e3);
+        return CreateInst(Opcode::CompositeConstructF64x3, e1, e2, e3);
     default:
         ThrowInvalidType(e1.Type());
     }
@@ -523,13 +523,13 @@ Value IREmitter::CompositeConstruct(const Value& e1, const Value& e2, const Valu
     }
     switch (e1.Type()) {
     case Type::U32:
-        return Inst(Opcode::CompositeConstructU32x4, e1, e2, e3, e4);
+        return CreateInst(Opcode::CompositeConstructU32x4, e1, e2, e3, e4);
     case Type::F16:
-        return Inst(Opcode::CompositeConstructF16x4, e1, e2, e3, e4);
+        return CreateInst(Opcode::CompositeConstructF16x4, e1, e2, e3, e4);
     case Type::F32:
-        return Inst(Opcode::CompositeConstructF32x4, e1, e2, e3, e4);
+        return CreateInst(Opcode::CompositeConstructF32x4, e1, e2, e3, e4);
     case Type::F64:
-        return Inst(Opcode::CompositeConstructF64x4, e1, e2, e3, e4);
+        return CreateInst(Opcode::CompositeConstructF64x4, e1, e2, e3, e4);
     default:
         ThrowInvalidType(e1.Type());
     }
@@ -540,7 +540,7 @@ Value IREmitter::CompositeExtract(const Value& vector, size_t element) {
         if (element >= limit) {
             UNREACHABLE_MSG("Out of bounds element {}", element);
         }
-        return Inst(opcode, vector, Value{static_cast<u32>(element)});
+        return CreateInst(opcode, vector, Value{static_cast<u32>(element)});
     }};
     switch (vector.Type()) {
     case Type::U32x2:
@@ -577,7 +577,7 @@ Value IREmitter::CompositeInsert(const Value& vector, const Value& object, size_
         if (element >= limit) {
             UNREACHABLE_MSG("Out of bounds element {}", element);
         }
-        return Inst(opcode, vector, object, Value{static_cast<u32>(element)});
+        return CreateInst(opcode, vector, object, Value{static_cast<u32>(element)});
     }};
     switch (vector.Type()) {
     case Type::U32x2:
@@ -615,50 +615,50 @@ Value IREmitter::Select(const U1& condition, const Value& true_value, const Valu
     }
     switch (true_value.Type()) {
     case Type::U1:
-        return Inst(Opcode::SelectU1, condition, true_value, false_value);
+        return CreateInst(Opcode::SelectU1, condition, true_value, false_value);
     case Type::U8:
-        return Inst(Opcode::SelectU8, condition, true_value, false_value);
+        return CreateInst(Opcode::SelectU8, condition, true_value, false_value);
     case Type::U16:
-        return Inst(Opcode::SelectU16, condition, true_value, false_value);
+        return CreateInst(Opcode::SelectU16, condition, true_value, false_value);
     case Type::U32:
-        return Inst(Opcode::SelectU32, condition, true_value, false_value);
+        return CreateInst(Opcode::SelectU32, condition, true_value, false_value);
     case Type::U64:
-        return Inst(Opcode::SelectU64, condition, true_value, false_value);
+        return CreateInst(Opcode::SelectU64, condition, true_value, false_value);
     case Type::F32:
-        return Inst(Opcode::SelectF32, condition, true_value, false_value);
+        return CreateInst(Opcode::SelectF32, condition, true_value, false_value);
     case Type::F64:
-        return Inst(Opcode::SelectF64, condition, true_value, false_value);
+        return CreateInst(Opcode::SelectF64, condition, true_value, false_value);
     default:
         UNREACHABLE_MSG("Invalid type {}", true_value.Type());
     }
 }
 
 U64 IREmitter::PackUint2x32(const Value& vector) {
-    return Inst<U64>(Opcode::PackUint2x32, vector);
+    return CreateInst<U64>(Opcode::PackUint2x32, vector);
 }
 
 Value IREmitter::UnpackUint2x32(const U64& value) {
-    return Inst<Value>(Opcode::UnpackUint2x32, value);
+    return CreateInst<Value>(Opcode::UnpackUint2x32, value);
 }
 
 F64 IREmitter::PackFloat2x32(const Value& vector) {
-    return Inst<F64>(Opcode::PackFloat2x32, vector);
+    return CreateInst<F64>(Opcode::PackFloat2x32, vector);
 }
 
 U32 IREmitter::PackFloat2x16(const Value& vector) {
-    return Inst<U32>(Opcode::PackFloat2x16, vector);
+    return CreateInst<U32>(Opcode::PackFloat2x16, vector);
 }
 
 Value IREmitter::UnpackFloat2x16(const U32& value) {
-    return Inst(Opcode::UnpackFloat2x16, value);
+    return CreateInst(Opcode::UnpackFloat2x16, value);
 }
 
 U32 IREmitter::PackHalf2x16(const Value& vector) {
-    return Inst<U32>(Opcode::PackHalf2x16, vector);
+    return CreateInst<U32>(Opcode::PackHalf2x16, vector);
 }
 
 Value IREmitter::UnpackHalf2x16(const U32& value) {
-    return Inst(Opcode::UnpackHalf2x16, value);
+    return CreateInst(Opcode::UnpackHalf2x16, value);
 }
 
 F32F64 IREmitter::FPMul(const F32F64& a, const F32F64& b) {
@@ -667,9 +667,9 @@ F32F64 IREmitter::FPMul(const F32F64& a, const F32F64& b) {
     }
     switch (a.Type()) {
     case Type::F32:
-        return Inst<F32>(Opcode::FPMul32, a, b);
+        return CreateInst<F32>(Opcode::FPMul32, a, b);
     case Type::F64:
-        return Inst<F64>(Opcode::FPMul64, a, b);
+        return CreateInst<F64>(Opcode::FPMul64, a, b);
     default:
         ThrowInvalidType(a.Type());
     }
@@ -681,9 +681,9 @@ F32F64 IREmitter::FPFma(const F32F64& a, const F32F64& b, const F32F64& c) {
     }
     switch (a.Type()) {
     case Type::F32:
-        return Inst<F32>(Opcode::FPFma32, a, b, c);
+        return CreateInst<F32>(Opcode::FPFma32, a, b, c);
     case Type::F64:
-        return Inst<F64>(Opcode::FPFma64, a, b, c);
+        return CreateInst<F64>(Opcode::FPFma64, a, b, c);
     default:
         ThrowInvalidType(a.Type());
     }
@@ -692,9 +692,9 @@ F32F64 IREmitter::FPFma(const F32F64& a, const F32F64& b, const F32F64& c) {
 F32F64 IREmitter::FPAbs(const F32F64& value) {
     switch (value.Type()) {
     case Type::F32:
-        return Inst<F32>(Opcode::FPAbs32, value);
+        return CreateInst<F32>(Opcode::FPAbs32, value);
     case Type::F64:
-        return Inst<F64>(Opcode::FPAbs64, value);
+        return CreateInst<F64>(Opcode::FPAbs64, value);
     default:
         ThrowInvalidType(value.Type());
     }
@@ -703,9 +703,9 @@ F32F64 IREmitter::FPAbs(const F32F64& value) {
 F32F64 IREmitter::FPNeg(const F32F64& value) {
     switch (value.Type()) {
     case Type::F32:
-        return Inst<F32>(Opcode::FPNeg32, value);
+        return CreateInst<F32>(Opcode::FPNeg32, value);
     case Type::F64:
-        return Inst<F64>(Opcode::FPNeg64, value);
+        return CreateInst<F64>(Opcode::FPNeg64, value);
     default:
         ThrowInvalidType(value.Type());
     }
@@ -723,31 +723,31 @@ F32F64 IREmitter::FPAbsNeg(const F32F64& value, bool abs, bool neg) {
 }
 
 F32 IREmitter::FPCos(const F32& value) {
-    return Inst<F32>(Opcode::FPCos, value);
+    return CreateInst<F32>(Opcode::FPCos, value);
 }
 
 F32 IREmitter::FPSin(const F32& value) {
-    return Inst<F32>(Opcode::FPSin, value);
+    return CreateInst<F32>(Opcode::FPSin, value);
 }
 
 F32 IREmitter::FPExp2(const F32& value) {
-    return Inst<F32>(Opcode::FPExp2, value);
+    return CreateInst<F32>(Opcode::FPExp2, value);
 }
 
 F32 IREmitter::FPLdexp(const F32& value, const U32& exp) {
-    return Inst<F32>(Opcode::FPLdexp, value, exp);
+    return CreateInst<F32>(Opcode::FPLdexp, value, exp);
 }
 
 F32 IREmitter::FPLog2(const F32& value) {
-    return Inst<F32>(Opcode::FPLog2, value);
+    return CreateInst<F32>(Opcode::FPLog2, value);
 }
 
 F32F64 IREmitter::FPRecip(const F32F64& value) {
     switch (value.Type()) {
     case Type::F32:
-        return Inst<F32>(Opcode::FPRecip32, value);
+        return CreateInst<F32>(Opcode::FPRecip32, value);
     case Type::F64:
-        return Inst<F64>(Opcode::FPRecip64, value);
+        return CreateInst<F64>(Opcode::FPRecip64, value);
     default:
         ThrowInvalidType(value.Type());
     }
@@ -756,24 +756,24 @@ F32F64 IREmitter::FPRecip(const F32F64& value) {
 F32F64 IREmitter::FPRecipSqrt(const F32F64& value) {
     switch (value.Type()) {
     case Type::F32:
-        return Inst<F32>(Opcode::FPRecipSqrt32, value);
+        return CreateInst<F32>(Opcode::FPRecipSqrt32, value);
     case Type::F64:
-        return Inst<F64>(Opcode::FPRecipSqrt64, value);
+        return CreateInst<F64>(Opcode::FPRecipSqrt64, value);
     default:
         ThrowInvalidType(value.Type());
     }
 }
 
 F32 IREmitter::FPSqrt(const F32& value) {
-    return Inst<F32>(Opcode::FPSqrt, value);
+    return CreateInst<F32>(Opcode::FPSqrt, value);
 }
 
 F32F64 IREmitter::FPSaturate(const F32F64& value) {
     switch (value.Type()) {
     case Type::F32:
-        return Inst<F32>(Opcode::FPSaturate32, value);
+        return CreateInst<F32>(Opcode::FPSaturate32, value);
     case Type::F64:
-        return Inst<F64>(Opcode::FPSaturate64, value);
+        return CreateInst<F64>(Opcode::FPSaturate64, value);
     default:
         ThrowInvalidType(value.Type());
     }
@@ -786,9 +786,9 @@ F32F64 IREmitter::FPClamp(const F32F64& value, const F32F64& min_value, const F3
     }
     switch (value.Type()) {
     case Type::F32:
-        return Inst<F32>(Opcode::FPClamp32, value, min_value, max_value);
+        return CreateInst<F32>(Opcode::FPClamp32, value, min_value, max_value);
     case Type::F64:
-        return Inst<F64>(Opcode::FPClamp64, value, min_value, max_value);
+        return CreateInst<F64>(Opcode::FPClamp64, value, min_value, max_value);
     default:
         ThrowInvalidType(value.Type());
     }
@@ -797,9 +797,9 @@ F32F64 IREmitter::FPClamp(const F32F64& value, const F32F64& min_value, const F3
 F32F64 IREmitter::FPRoundEven(const F32F64& value) {
     switch (value.Type()) {
     case Type::F32:
-        return Inst<F32>(Opcode::FPRoundEven32, value);
+        return CreateInst<F32>(Opcode::FPRoundEven32, value);
     case Type::F64:
-        return Inst<F64>(Opcode::FPRoundEven64, value);
+        return CreateInst<F64>(Opcode::FPRoundEven64, value);
     default:
         ThrowInvalidType(value.Type());
     }
@@ -808,9 +808,9 @@ F32F64 IREmitter::FPRoundEven(const F32F64& value) {
 F32F64 IREmitter::FPFloor(const F32F64& value) {
     switch (value.Type()) {
     case Type::F32:
-        return Inst<F32>(Opcode::FPFloor32, value);
+        return CreateInst<F32>(Opcode::FPFloor32, value);
     case Type::F64:
-        return Inst<F64>(Opcode::FPFloor64, value);
+        return CreateInst<F64>(Opcode::FPFloor64, value);
     default:
         ThrowInvalidType(value.Type());
     }
@@ -819,9 +819,9 @@ F32F64 IREmitter::FPFloor(const F32F64& value) {
 F32F64 IREmitter::FPCeil(const F32F64& value) {
     switch (value.Type()) {
     case Type::F32:
-        return Inst<F32>(Opcode::FPCeil32, value);
+        return CreateInst<F32>(Opcode::FPCeil32, value);
     case Type::F64:
-        return Inst<F64>(Opcode::FPCeil64, value);
+        return CreateInst<F64>(Opcode::FPCeil64, value);
     default:
         ThrowInvalidType(value.Type());
     }
@@ -830,16 +830,16 @@ F32F64 IREmitter::FPCeil(const F32F64& value) {
 F32F64 IREmitter::FPTrunc(const F32F64& value) {
     switch (value.Type()) {
     case Type::F32:
-        return Inst<F32>(Opcode::FPTrunc32, value);
+        return CreateInst<F32>(Opcode::FPTrunc32, value);
     case Type::F64:
-        return Inst<F64>(Opcode::FPTrunc64, value);
+        return CreateInst<F64>(Opcode::FPTrunc64, value);
     default:
         ThrowInvalidType(value.Type());
     }
 }
 
 F32 IREmitter::Fract(const F32& value) {
-    return Inst<F32>(Opcode::FPFract, value);
+    return CreateInst<F32>(Opcode::FPFract, value);
 }
 
 U1 IREmitter::FPEqual(const F32F64& lhs, const F32F64& rhs, bool ordered) {
@@ -848,9 +848,9 @@ U1 IREmitter::FPEqual(const F32F64& lhs, const F32F64& rhs, bool ordered) {
     }
     switch (lhs.Type()) {
     case Type::F32:
-        return Inst<U1>(ordered ? Opcode::FPOrdEqual32 : Opcode::FPUnordEqual32, lhs, rhs);
+        return CreateInst<U1>(ordered ? Opcode::FPOrdEqual32 : Opcode::FPUnordEqual32, lhs, rhs);
     case Type::F64:
-        return Inst<U1>(ordered ? Opcode::FPOrdEqual64 : Opcode::FPUnordEqual64, lhs, rhs);
+        return CreateInst<U1>(ordered ? Opcode::FPOrdEqual64 : Opcode::FPUnordEqual64, lhs, rhs);
     default:
         ThrowInvalidType(lhs.Type());
     }
@@ -862,9 +862,9 @@ U1 IREmitter::FPNotEqual(const F32F64& lhs, const F32F64& rhs, bool ordered) {
     }
     switch (lhs.Type()) {
     case Type::F32:
-        return Inst<U1>(ordered ? Opcode::FPOrdNotEqual32 : Opcode::FPUnordNotEqual32, lhs, rhs);
+        return CreateInst<U1>(ordered ? Opcode::FPOrdNotEqual32 : Opcode::FPUnordNotEqual32, lhs, rhs);
     case Type::F64:
-        return Inst<U1>(ordered ? Opcode::FPOrdNotEqual64 : Opcode::FPUnordNotEqual64, lhs, rhs);
+        return CreateInst<U1>(ordered ? Opcode::FPOrdNotEqual64 : Opcode::FPUnordNotEqual64, lhs, rhs);
     default:
         ThrowInvalidType(lhs.Type());
     }
@@ -876,9 +876,9 @@ U1 IREmitter::FPLessThan(const F32F64& lhs, const F32F64& rhs, bool ordered) {
     }
     switch (lhs.Type()) {
     case Type::F32:
-        return Inst<U1>(ordered ? Opcode::FPOrdLessThan32 : Opcode::FPUnordLessThan32, lhs, rhs);
+        return CreateInst<U1>(ordered ? Opcode::FPOrdLessThan32 : Opcode::FPUnordLessThan32, lhs, rhs);
     case Type::F64:
-        return Inst<U1>(ordered ? Opcode::FPOrdLessThan64 : Opcode::FPUnordLessThan64, lhs, rhs);
+        return CreateInst<U1>(ordered ? Opcode::FPOrdLessThan64 : Opcode::FPUnordLessThan64, lhs, rhs);
     default:
         ThrowInvalidType(lhs.Type());
     }
@@ -890,10 +890,10 @@ U1 IREmitter::FPGreaterThan(const F32F64& lhs, const F32F64& rhs, bool ordered) 
     }
     switch (lhs.Type()) {
     case Type::F32:
-        return Inst<U1>(ordered ? Opcode::FPOrdGreaterThan32 : Opcode::FPUnordGreaterThan32, lhs,
+        return CreateInst<U1>(ordered ? Opcode::FPOrdGreaterThan32 : Opcode::FPUnordGreaterThan32, lhs,
                         rhs);
     case Type::F64:
-        return Inst<U1>(ordered ? Opcode::FPOrdGreaterThan64 : Opcode::FPUnordGreaterThan64, lhs,
+        return CreateInst<U1>(ordered ? Opcode::FPOrdGreaterThan64 : Opcode::FPUnordGreaterThan64, lhs,
                         rhs);
     default:
         ThrowInvalidType(lhs.Type());
@@ -906,10 +906,10 @@ U1 IREmitter::FPLessThanEqual(const F32F64& lhs, const F32F64& rhs, bool ordered
     }
     switch (lhs.Type()) {
     case Type::F32:
-        return Inst<U1>(ordered ? Opcode::FPOrdLessThanEqual32 : Opcode::FPUnordLessThanEqual32,
+        return CreateInst<U1>(ordered ? Opcode::FPOrdLessThanEqual32 : Opcode::FPUnordLessThanEqual32,
                         lhs, rhs);
     case Type::F64:
-        return Inst<U1>(ordered ? Opcode::FPOrdLessThanEqual64 : Opcode::FPUnordLessThanEqual64,
+        return CreateInst<U1>(ordered ? Opcode::FPOrdLessThanEqual64 : Opcode::FPUnordLessThanEqual64,
                         lhs, rhs);
     default:
         ThrowInvalidType(lhs.Type());
@@ -922,11 +922,11 @@ U1 IREmitter::FPGreaterThanEqual(const F32F64& lhs, const F32F64& rhs, bool orde
     }
     switch (lhs.Type()) {
     case Type::F32:
-        return Inst<U1>(ordered ? Opcode::FPOrdGreaterThanEqual32
+        return CreateInst<U1>(ordered ? Opcode::FPOrdGreaterThanEqual32
                                 : Opcode::FPUnordGreaterThanEqual32,
                         lhs, rhs);
     case Type::F64:
-        return Inst<U1>(ordered ? Opcode::FPOrdGreaterThanEqual64
+        return CreateInst<U1>(ordered ? Opcode::FPOrdGreaterThanEqual64
                                 : Opcode::FPUnordGreaterThanEqual64,
                         lhs, rhs);
     default:
@@ -937,9 +937,9 @@ U1 IREmitter::FPGreaterThanEqual(const F32F64& lhs, const F32F64& rhs, bool orde
 U1 IREmitter::FPIsNan(const F32F64& value) {
     switch (value.Type()) {
     case Type::F32:
-        return Inst<U1>(Opcode::FPIsNan32, value);
+        return CreateInst<U1>(Opcode::FPIsNan32, value);
     case Type::F64:
-        return Inst<U1>(Opcode::FPIsNan64, value);
+        return CreateInst<U1>(Opcode::FPIsNan64, value);
     default:
         ThrowInvalidType(value.Type());
     }
@@ -948,16 +948,16 @@ U1 IREmitter::FPIsNan(const F32F64& value) {
 U1 IREmitter::FPIsInf(const F32F64& value) {
     switch (value.Type()) {
     case Type::F32:
-        return Inst<U1>(Opcode::FPIsInf32, value);
+        return CreateInst<U1>(Opcode::FPIsInf32, value);
     case Type::F64:
-        return Inst<U1>(Opcode::FPIsInf64, value);
+        return CreateInst<U1>(Opcode::FPIsInf64, value);
     default:
         ThrowInvalidType(value.Type());
     }
 }
 
 U1 IREmitter::FPCmpClass32(const F32& value, const U32& op) {
-    return Inst<U1>(Opcode::FPCmpClass32, value, op);
+    return CreateInst<U1>(Opcode::FPCmpClass32, value, op);
 }
 
 U1 IREmitter::FPOrdered(const F32F64& lhs, const F32F64& rhs) {
@@ -981,12 +981,12 @@ F32F64 IREmitter::FPMax(const F32F64& lhs, const F32F64& rhs, bool is_legacy) {
 
     switch (lhs.Type()) {
     case Type::F32:
-        return Inst<F32>(Opcode::FPMax32, lhs, rhs, is_legacy);
+        return CreateInst<F32>(Opcode::FPMax32, lhs, rhs, is_legacy);
     case Type::F64:
         if (is_legacy) {
             UNREACHABLE_MSG("F64 cannot be used with LEGACY ops");
         }
-        return Inst<F64>(Opcode::FPMax64, lhs, rhs);
+        return CreateInst<F64>(Opcode::FPMax64, lhs, rhs);
     default:
         ThrowInvalidType(lhs.Type());
     }
@@ -998,12 +998,12 @@ F32F64 IREmitter::FPMin(const F32F64& lhs, const F32F64& rhs, bool is_legacy) {
     }
     switch (lhs.Type()) {
     case Type::F32:
-        return Inst<F32>(Opcode::FPMin32, lhs, rhs, is_legacy);
+        return CreateInst<F32>(Opcode::FPMin32, lhs, rhs, is_legacy);
     case Type::F64:
         if (is_legacy) {
             UNREACHABLE_MSG("F64 cannot be used with LEGACY ops");
         }
-        return Inst<F64>(Opcode::FPMin64, lhs, rhs);
+        return CreateInst<F64>(Opcode::FPMin64, lhs, rhs);
     default:
         ThrowInvalidType(lhs.Type());
     }
@@ -1015,9 +1015,9 @@ U32U64 IREmitter::IAdd(const U32U64& a, const U32U64& b) {
     }
     switch (a.Type()) {
     case Type::U32:
-        return Inst<U32>(Opcode::IAdd32, a, b);
+        return CreateInst<U32>(Opcode::IAdd32, a, b);
     case Type::U64:
-        return Inst<U64>(Opcode::IAdd64, a, b);
+        return CreateInst<U64>(Opcode::IAdd64, a, b);
     default:
         ThrowInvalidType(a.Type());
     }
@@ -1029,7 +1029,7 @@ Value IREmitter::IAddCary(const U32& a, const U32& b) {
     }
     switch (a.Type()) {
     case Type::U32:
-        return Inst<U32>(Opcode::IAddCary32, a, b);
+        return CreateInst<U32>(Opcode::IAddCary32, a, b);
     default:
         ThrowInvalidType(a.Type());
     }
@@ -1041,16 +1041,16 @@ U32U64 IREmitter::ISub(const U32U64& a, const U32U64& b) {
     }
     switch (a.Type()) {
     case Type::U32:
-        return Inst<U32>(Opcode::ISub32, a, b);
+        return CreateInst<U32>(Opcode::ISub32, a, b);
     case Type::U64:
-        return Inst<U64>(Opcode::ISub64, a, b);
+        return CreateInst<U64>(Opcode::ISub64, a, b);
     default:
         ThrowInvalidType(a.Type());
     }
 }
 
 IR::Value IREmitter::IMulExt(const U32& a, const U32& b, bool is_signed) {
-    return Inst(is_signed ? Opcode::SMulExt : Opcode::UMulExt, a, b);
+    return CreateInst(is_signed ? Opcode::SMulExt : Opcode::UMulExt, a, b);
 }
 
 U32U64 IREmitter::IMul(const U32U64& a, const U32U64& b) {
@@ -1059,35 +1059,35 @@ U32U64 IREmitter::IMul(const U32U64& a, const U32U64& b) {
     }
     switch (a.Type()) {
     case Type::U32:
-        return Inst<U32>(Opcode::IMul32, a, b);
+        return CreateInst<U32>(Opcode::IMul32, a, b);
     case Type::U64:
-        return Inst<U64>(Opcode::IMul64, a, b);
+        return CreateInst<U64>(Opcode::IMul64, a, b);
     default:
         ThrowInvalidType(a.Type());
     }
 }
 
 U32 IREmitter::IDiv(const U32& a, const U32& b, bool is_signed) {
-    return Inst<U32>(is_signed ? Opcode::SDiv32 : Opcode::UDiv32, a, b);
+    return CreateInst<U32>(is_signed ? Opcode::SDiv32 : Opcode::UDiv32, a, b);
 }
 
 U32 IREmitter::IMod(const U32& a, const U32& b, bool is_signed) {
-    return Inst<U32>(is_signed ? Opcode::SMod32 : Opcode::UMod32, a, b);
+    return CreateInst<U32>(is_signed ? Opcode::SMod32 : Opcode::UMod32, a, b);
 }
 
 U32U64 IREmitter::INeg(const U32U64& value) {
     switch (value.Type()) {
     case Type::U32:
-        return Inst<U32>(Opcode::INeg32, value);
+        return CreateInst<U32>(Opcode::INeg32, value);
     case Type::U64:
-        return Inst<U64>(Opcode::INeg64, value);
+        return CreateInst<U64>(Opcode::INeg64, value);
     default:
         ThrowInvalidType(value.Type());
     }
 }
 
 U32 IREmitter::IAbs(const U32& value) {
-    return Inst<U32>(Opcode::IAbs32, value);
+    return CreateInst<U32>(Opcode::IAbs32, value);
 }
 
 U32U64 IREmitter::ShiftLeftLogical(const U32U64& base, const U32& shift) {
@@ -1097,9 +1097,9 @@ U32U64 IREmitter::ShiftLeftLogical(const U32U64& base, const U32& shift) {
 
     switch (base.Type()) {
     case Type::U32:
-        return Inst<U32>(Opcode::ShiftLeftLogical32, base, shift);
+        return CreateInst<U32>(Opcode::ShiftLeftLogical32, base, shift);
     case Type::U64:
-        return Inst<U64>(Opcode::ShiftLeftLogical64, base, shift);
+        return CreateInst<U64>(Opcode::ShiftLeftLogical64, base, shift);
     default:
         ThrowInvalidType(base.Type());
     }
@@ -1112,9 +1112,9 @@ U32U64 IREmitter::ShiftRightLogical(const U32U64& base, const U32& shift) {
 
     switch (base.Type()) {
     case Type::U32:
-        return Inst<U32>(Opcode::ShiftRightLogical32, base, shift);
+        return CreateInst<U32>(Opcode::ShiftRightLogical32, base, shift);
     case Type::U64:
-        return Inst<U64>(Opcode::ShiftRightLogical64, base, shift);
+        return CreateInst<U64>(Opcode::ShiftRightLogical64, base, shift);
     default:
         ThrowInvalidType(base.Type());
     }
@@ -1127,9 +1127,9 @@ U32U64 IREmitter::ShiftRightArithmetic(const U32U64& base, const U32& shift) {
 
     switch (base.Type()) {
     case Type::U32:
-        return Inst<U32>(Opcode::ShiftRightArithmetic32, base, shift);
+        return CreateInst<U32>(Opcode::ShiftRightArithmetic32, base, shift);
     case Type::U64:
-        return Inst<U64>(Opcode::ShiftRightArithmetic64, base, shift);
+        return CreateInst<U64>(Opcode::ShiftRightArithmetic64, base, shift);
     default:
         ThrowInvalidType(base.Type());
     }
@@ -1141,9 +1141,9 @@ U32U64 IREmitter::BitwiseAnd(const U32U64& a, const U32U64& b) {
     }
     switch (a.Type()) {
     case Type::U32:
-        return Inst<U32>(Opcode::BitwiseAnd32, a, b);
+        return CreateInst<U32>(Opcode::BitwiseAnd32, a, b);
     case Type::U64:
-        return Inst<U64>(Opcode::BitwiseAnd64, a, b);
+        return CreateInst<U64>(Opcode::BitwiseAnd64, a, b);
     default:
         ThrowInvalidType(a.Type());
     }
@@ -1155,59 +1155,59 @@ U32U64 IREmitter::BitwiseOr(const U32U64& a, const U32U64& b) {
     }
     switch (a.Type()) {
     case Type::U32:
-        return Inst<U32>(Opcode::BitwiseOr32, a, b);
+        return CreateInst<U32>(Opcode::BitwiseOr32, a, b);
     case Type::U64:
-        return Inst<U64>(Opcode::BitwiseOr64, a, b);
+        return CreateInst<U64>(Opcode::BitwiseOr64, a, b);
     default:
         ThrowInvalidType(a.Type());
     }
 }
 
 U32 IREmitter::BitwiseXor(const U32& a, const U32& b) {
-    return Inst<U32>(Opcode::BitwiseXor32, a, b);
+    return CreateInst<U32>(Opcode::BitwiseXor32, a, b);
 }
 
 U32 IREmitter::BitFieldInsert(const U32& base, const U32& insert, const U32& offset,
                               const U32& count) {
-    return Inst<U32>(Opcode::BitFieldInsert, base, insert, offset, count);
+    return CreateInst<U32>(Opcode::BitFieldInsert, base, insert, offset, count);
 }
 
 U32 IREmitter::BitFieldExtract(const U32& base, const U32& offset, const U32& count,
                                bool is_signed) {
-    return Inst<U32>(is_signed ? Opcode::BitFieldSExtract : Opcode::BitFieldUExtract, base, offset,
+    return CreateInst<U32>(is_signed ? Opcode::BitFieldSExtract : Opcode::BitFieldUExtract, base, offset,
                      count);
 }
 
 U32 IREmitter::BitReverse(const U32& value) {
-    return Inst<U32>(Opcode::BitReverse32, value);
+    return CreateInst<U32>(Opcode::BitReverse32, value);
 }
 
 U32 IREmitter::BitCount(const U32& value) {
-    return Inst<U32>(Opcode::BitCount32, value);
+    return CreateInst<U32>(Opcode::BitCount32, value);
 }
 
 U32 IREmitter::BitwiseNot(const U32& value) {
-    return Inst<U32>(Opcode::BitwiseNot32, value);
+    return CreateInst<U32>(Opcode::BitwiseNot32, value);
 }
 
 U32 IREmitter::FindSMsb(const U32& value) {
-    return Inst<U32>(Opcode::FindSMsb32, value);
+    return CreateInst<U32>(Opcode::FindSMsb32, value);
 }
 
 U32 IREmitter::FindUMsb(const U32& value) {
-    return Inst<U32>(Opcode::FindUMsb32, value);
+    return CreateInst<U32>(Opcode::FindUMsb32, value);
 }
 
 U32 IREmitter::FindILsb(const U32& value) {
-    return Inst<U32>(Opcode::FindILsb32, value);
+    return CreateInst<U32>(Opcode::FindILsb32, value);
 }
 
 U32 IREmitter::SMin(const U32& a, const U32& b) {
-    return Inst<U32>(Opcode::SMin32, a, b);
+    return CreateInst<U32>(Opcode::SMin32, a, b);
 }
 
 U32 IREmitter::UMin(const U32& a, const U32& b) {
-    return Inst<U32>(Opcode::UMin32, a, b);
+    return CreateInst<U32>(Opcode::UMin32, a, b);
 }
 
 U32 IREmitter::IMin(const U32& a, const U32& b, bool is_signed) {
@@ -1215,11 +1215,11 @@ U32 IREmitter::IMin(const U32& a, const U32& b, bool is_signed) {
 }
 
 U32 IREmitter::SMax(const U32& a, const U32& b) {
-    return Inst<U32>(Opcode::SMax32, a, b);
+    return CreateInst<U32>(Opcode::SMax32, a, b);
 }
 
 U32 IREmitter::UMax(const U32& a, const U32& b) {
-    return Inst<U32>(Opcode::UMax32, a, b);
+    return CreateInst<U32>(Opcode::UMax32, a, b);
 }
 
 U32 IREmitter::IMax(const U32& a, const U32& b, bool is_signed) {
@@ -1227,11 +1227,11 @@ U32 IREmitter::IMax(const U32& a, const U32& b, bool is_signed) {
 }
 
 U32 IREmitter::SClamp(const U32& value, const U32& min, const U32& max) {
-    return Inst<U32>(Opcode::SClamp32, value, min, max);
+    return CreateInst<U32>(Opcode::SClamp32, value, min, max);
 }
 
 U32 IREmitter::UClamp(const U32& value, const U32& min, const U32& max) {
-    return Inst<U32>(Opcode::UClamp32, value, min, max);
+    return CreateInst<U32>(Opcode::UClamp32, value, min, max);
 }
 
 U1 IREmitter::ILessThan(const U32U64& lhs, const U32U64& rhs, bool is_signed) {
@@ -1240,9 +1240,9 @@ U1 IREmitter::ILessThan(const U32U64& lhs, const U32U64& rhs, bool is_signed) {
     }
     switch (lhs.Type()) {
     case Type::U32:
-        return Inst<U1>(is_signed ? Opcode::SLessThan32 : Opcode::ULessThan32, lhs, rhs);
+        return CreateInst<U1>(is_signed ? Opcode::SLessThan32 : Opcode::ULessThan32, lhs, rhs);
     case Type::U64:
-        return Inst<U1>(is_signed ? Opcode::SLessThan64 : Opcode::ULessThan64, lhs, rhs);
+        return CreateInst<U1>(is_signed ? Opcode::SLessThan64 : Opcode::ULessThan64, lhs, rhs);
     default:
         ThrowInvalidType(lhs.Type());
     }
@@ -1254,42 +1254,42 @@ U1 IREmitter::IEqual(const U32U64& lhs, const U32U64& rhs) {
     }
     switch (lhs.Type()) {
     case Type::U32:
-        return Inst<U1>(Opcode::IEqual, lhs, rhs);
+        return CreateInst<U1>(Opcode::IEqual, lhs, rhs);
     default:
         ThrowInvalidType(lhs.Type());
     }
 }
 
 U1 IREmitter::ILessThanEqual(const U32& lhs, const U32& rhs, bool is_signed) {
-    return Inst<U1>(is_signed ? Opcode::SLessThanEqual : Opcode::ULessThanEqual, lhs, rhs);
+    return CreateInst<U1>(is_signed ? Opcode::SLessThanEqual : Opcode::ULessThanEqual, lhs, rhs);
 }
 
 U1 IREmitter::IGreaterThan(const U32& lhs, const U32& rhs, bool is_signed) {
-    return Inst<U1>(is_signed ? Opcode::SGreaterThan : Opcode::UGreaterThan, lhs, rhs);
+    return CreateInst<U1>(is_signed ? Opcode::SGreaterThan : Opcode::UGreaterThan, lhs, rhs);
 }
 
 U1 IREmitter::INotEqual(const U32& lhs, const U32& rhs) {
-    return Inst<U1>(Opcode::INotEqual, lhs, rhs);
+    return CreateInst<U1>(Opcode::INotEqual, lhs, rhs);
 }
 
 U1 IREmitter::IGreaterThanEqual(const U32& lhs, const U32& rhs, bool is_signed) {
-    return Inst<U1>(is_signed ? Opcode::SGreaterThanEqual : Opcode::UGreaterThanEqual, lhs, rhs);
+    return CreateInst<U1>(is_signed ? Opcode::SGreaterThanEqual : Opcode::UGreaterThanEqual, lhs, rhs);
 }
 
 U1 IREmitter::LogicalOr(const U1& a, const U1& b) {
-    return Inst<U1>(Opcode::LogicalOr, a, b);
+    return CreateInst<U1>(Opcode::LogicalOr, a, b);
 }
 
 U1 IREmitter::LogicalAnd(const U1& a, const U1& b) {
-    return Inst<U1>(Opcode::LogicalAnd, a, b);
+    return CreateInst<U1>(Opcode::LogicalAnd, a, b);
 }
 
 U1 IREmitter::LogicalXor(const U1& a, const U1& b) {
-    return Inst<U1>(Opcode::LogicalXor, a, b);
+    return CreateInst<U1>(Opcode::LogicalXor, a, b);
 }
 
 U1 IREmitter::LogicalNot(const U1& value) {
-    return Inst<U1>(Opcode::LogicalNot, value);
+    return CreateInst<U1>(Opcode::LogicalNot, value);
 }
 
 U32U64 IREmitter::ConvertFToS(size_t bitsize, const F32F64& value) {
@@ -1297,9 +1297,9 @@ U32U64 IREmitter::ConvertFToS(size_t bitsize, const F32F64& value) {
     case 32:
         switch (value.Type()) {
         case Type::F32:
-            return Inst<U32>(Opcode::ConvertS32F32, value);
+            return CreateInst<U32>(Opcode::ConvertS32F32, value);
         case Type::F64:
-            return Inst<U32>(Opcode::ConvertS32F64, value);
+            return CreateInst<U32>(Opcode::ConvertS32F64, value);
         default:
             ThrowInvalidType(value.Type());
         }
@@ -1314,7 +1314,7 @@ U32U64 IREmitter::ConvertFToU(size_t bitsize, const F32F64& value) {
     case 32:
         switch (value.Type()) {
         case Type::F32:
-            return Inst<U32>(Opcode::ConvertU32F32, value);
+            return CreateInst<U32>(Opcode::ConvertU32F32, value);
         default:
             ThrowInvalidType(value.Type());
         }
@@ -1332,14 +1332,14 @@ F32F64 IREmitter::ConvertSToF(size_t dest_bitsize, size_t src_bitsize, const Val
     case 32:
         switch (src_bitsize) {
         case 32:
-            return Inst<F32>(Opcode::ConvertF32S32, value);
+            return CreateInst<F32>(Opcode::ConvertF32S32, value);
         default:
             break;
         }
     case 64:
         switch (src_bitsize) {
         case 32:
-            return Inst<F64>(Opcode::ConvertF64S32, value);
+            return CreateInst<F64>(Opcode::ConvertF64S32, value);
         default:
             break;
         }
@@ -1354,16 +1354,16 @@ F32F64 IREmitter::ConvertUToF(size_t dest_bitsize, size_t src_bitsize, const Val
     case 32:
         switch (src_bitsize) {
         case 16:
-            return Inst<F32>(Opcode::ConvertF32U16, value);
+            return CreateInst<F32>(Opcode::ConvertF32U16, value);
         case 32:
-            return Inst<F32>(Opcode::ConvertF32U32, value);
+            return CreateInst<F32>(Opcode::ConvertF32U32, value);
         default:
             break;
         }
     case 64:
         switch (src_bitsize) {
         case 32:
-            return Inst<F64>(Opcode::ConvertF64U32, value);
+            return CreateInst<F64>(Opcode::ConvertF64U32, value);
         default:
             break;
         }
@@ -1384,14 +1384,14 @@ U16U32U64 IREmitter::UConvert(size_t result_bitsize, const U16U32U64& value) {
     case 16:
         switch (value.Type()) {
         case Type::U32:
-            return Inst<U16>(Opcode::ConvertU16U32, value);
+            return CreateInst<U16>(Opcode::ConvertU16U32, value);
         default:
             break;
         }
     case 32:
         switch (value.Type()) {
         case Type::U16:
-            return Inst<U32>(Opcode::ConvertU32U16, value);
+            return CreateInst<U32>(Opcode::ConvertU32U16, value);
         default:
             break;
         }
@@ -1406,23 +1406,23 @@ F16F32F64 IREmitter::FPConvert(size_t result_bitsize, const F16F32F64& value) {
     case 16:
         switch (value.Type()) {
         case Type::F32:
-            return Inst<F16>(Opcode::ConvertF16F32, value);
+            return CreateInst<F16>(Opcode::ConvertF16F32, value);
         default:
             break;
         }
     case 32:
         switch (value.Type()) {
         case Type::F16:
-            return Inst<F32>(Opcode::ConvertF32F16, value);
+            return CreateInst<F32>(Opcode::ConvertF32F16, value);
         case Type::F64:
-            return Inst<F32>(Opcode::ConvertF32F64, value);
+            return CreateInst<F32>(Opcode::ConvertF32F64, value);
         default:
             break;
         }
     case 64:
         switch (value.Type()) {
         case Type::F32:
-            return Inst<F64>(Opcode::ConvertF64F32, value);
+            return CreateInst<F64>(Opcode::ConvertF64F32, value);
         default:
             break;
         }
@@ -1434,17 +1434,17 @@ F16F32F64 IREmitter::FPConvert(size_t result_bitsize, const F16F32F64& value) {
 
 Value IREmitter::ImageAtomicIAdd(const Value& handle, const Value& coords, const Value& value,
                                  TextureInstInfo info) {
-    return Inst(Opcode::ImageAtomicIAdd32, Flags{info}, handle, coords, value);
+    return CreateInst(Opcode::ImageAtomicIAdd32, Flags{info}, handle, coords, value);
 }
 
 Value IREmitter::ImageAtomicSMin(const Value& handle, const Value& coords, const Value& value,
                                  TextureInstInfo info) {
-    return Inst(Opcode::ImageAtomicSMin32, Flags{info}, handle, coords, value);
+    return CreateInst(Opcode::ImageAtomicSMin32, Flags{info}, handle, coords, value);
 }
 
 Value IREmitter::ImageAtomicUMin(const Value& handle, const Value& coords, const Value& value,
                                  TextureInstInfo info) {
-    return Inst(Opcode::ImageAtomicUMin32, Flags{info}, handle, coords, value);
+    return CreateInst(Opcode::ImageAtomicUMin32, Flags{info}, handle, coords, value);
 }
 
 Value IREmitter::ImageAtomicIMin(const Value& handle, const Value& coords, const Value& value,
@@ -1455,12 +1455,12 @@ Value IREmitter::ImageAtomicIMin(const Value& handle, const Value& coords, const
 
 Value IREmitter::ImageAtomicSMax(const Value& handle, const Value& coords, const Value& value,
                                  TextureInstInfo info) {
-    return Inst(Opcode::ImageAtomicSMax32, Flags{info}, handle, coords, value);
+    return CreateInst(Opcode::ImageAtomicSMax32, Flags{info}, handle, coords, value);
 }
 
 Value IREmitter::ImageAtomicUMax(const Value& handle, const Value& coords, const Value& value,
                                  TextureInstInfo info) {
-    return Inst(Opcode::ImageAtomicUMax32, Flags{info}, handle, coords, value);
+    return CreateInst(Opcode::ImageAtomicUMax32, Flags{info}, handle, coords, value);
 }
 
 Value IREmitter::ImageAtomicIMax(const Value& handle, const Value& coords, const Value& value,
@@ -1471,107 +1471,107 @@ Value IREmitter::ImageAtomicIMax(const Value& handle, const Value& coords, const
 
 Value IREmitter::ImageAtomicInc(const Value& handle, const Value& coords, const Value& value,
                                 TextureInstInfo info) {
-    return Inst(Opcode::ImageAtomicInc32, Flags{info}, handle, coords, value);
+    return CreateInst(Opcode::ImageAtomicInc32, Flags{info}, handle, coords, value);
 }
 
 Value IREmitter::ImageAtomicDec(const Value& handle, const Value& coords, const Value& value,
                                 TextureInstInfo info) {
-    return Inst(Opcode::ImageAtomicDec32, Flags{info}, handle, coords, value);
+    return CreateInst(Opcode::ImageAtomicDec32, Flags{info}, handle, coords, value);
 }
 
 Value IREmitter::ImageAtomicAnd(const Value& handle, const Value& coords, const Value& value,
                                 TextureInstInfo info) {
-    return Inst(Opcode::ImageAtomicAnd32, Flags{info}, handle, coords, value);
+    return CreateInst(Opcode::ImageAtomicAnd32, Flags{info}, handle, coords, value);
 }
 
 Value IREmitter::ImageAtomicOr(const Value& handle, const Value& coords, const Value& value,
                                TextureInstInfo info) {
-    return Inst(Opcode::ImageAtomicOr32, Flags{info}, handle, coords, value);
+    return CreateInst(Opcode::ImageAtomicOr32, Flags{info}, handle, coords, value);
 }
 
 Value IREmitter::ImageAtomicXor(const Value& handle, const Value& coords, const Value& value,
                                 TextureInstInfo info) {
-    return Inst(Opcode::ImageAtomicXor32, Flags{info}, handle, coords, value);
+    return CreateInst(Opcode::ImageAtomicXor32, Flags{info}, handle, coords, value);
 }
 
 Value IREmitter::ImageAtomicExchange(const Value& handle, const Value& coords, const Value& value,
                                      TextureInstInfo info) {
-    return Inst(Opcode::ImageAtomicExchange32, Flags{info}, handle, coords, value);
+    return CreateInst(Opcode::ImageAtomicExchange32, Flags{info}, handle, coords, value);
 }
 
 Value IREmitter::ImageSampleRaw(const Value& handle, const Value& address1, const Value& address2,
                                 const Value& address3, const Value& address4,
                                 TextureInstInfo info) {
-    return Inst(Opcode::ImageSampleRaw, Flags{info}, handle, address1, address2, address3,
+    return CreateInst(Opcode::ImageSampleRaw, Flags{info}, handle, address1, address2, address3,
                 address4);
 }
 
 Value IREmitter::ImageSampleImplicitLod(const Value& handle, const Value& coords, const F32& bias,
                                         const Value& offset, TextureInstInfo info) {
-    return Inst(Opcode::ImageSampleImplicitLod, Flags{info}, handle, coords, bias, offset);
+    return CreateInst(Opcode::ImageSampleImplicitLod, Flags{info}, handle, coords, bias, offset);
 }
 
 Value IREmitter::ImageSampleExplicitLod(const Value& handle, const Value& coords, const F32& lod,
                                         const Value& offset, TextureInstInfo info) {
-    return Inst(Opcode::ImageSampleExplicitLod, Flags{info}, handle, coords, lod, offset);
+    return CreateInst(Opcode::ImageSampleExplicitLod, Flags{info}, handle, coords, lod, offset);
 }
 
 Value IREmitter::ImageSampleDrefImplicitLod(const Value& handle, const Value& coords,
                                             const F32& dref, const F32& bias, const Value& offset,
                                             TextureInstInfo info) {
-    return Inst(Opcode::ImageSampleDrefImplicitLod, Flags{info}, handle, coords, dref, bias,
+    return CreateInst(Opcode::ImageSampleDrefImplicitLod, Flags{info}, handle, coords, dref, bias,
                 offset);
 }
 
 Value IREmitter::ImageSampleDrefExplicitLod(const Value& handle, const Value& coords,
                                             const F32& dref, const F32& lod, const Value& offset,
                                             TextureInstInfo info) {
-    return Inst(Opcode::ImageSampleDrefExplicitLod, Flags{info}, handle, coords, dref, lod, offset);
+    return CreateInst(Opcode::ImageSampleDrefExplicitLod, Flags{info}, handle, coords, dref, lod, offset);
 }
 
 Value IREmitter::ImageGather(const Value& handle, const Value& coords, const Value& offset,
                              TextureInstInfo info) {
-    return Inst(Opcode::ImageGather, Flags{info}, handle, coords, offset);
+    return CreateInst(Opcode::ImageGather, Flags{info}, handle, coords, offset);
 }
 
 Value IREmitter::ImageGatherDref(const Value& handle, const Value& coords, const Value& offset,
                                  const F32& dref, TextureInstInfo info) {
-    return Inst(Opcode::ImageGatherDref, Flags{info}, handle, coords, offset, dref);
+    return CreateInst(Opcode::ImageGatherDref, Flags{info}, handle, coords, offset, dref);
 }
 
 Value IREmitter::ImageFetch(const Value& handle, const Value& coords, const Value& offset,
                             const U32& lod, const U32& multisampling, TextureInstInfo info) {
-    return Inst(Opcode::ImageFetch, Flags{info}, handle, coords, offset, lod, multisampling);
+    return CreateInst(Opcode::ImageFetch, Flags{info}, handle, coords, offset, lod, multisampling);
 }
 
 Value IREmitter::ImageQueryDimension(const Value& handle, const IR::U32& lod,
                                      const IR::U1& skip_mips) {
-    return Inst(Opcode::ImageQueryDimensions, handle, lod, skip_mips);
+    return CreateInst(Opcode::ImageQueryDimensions, handle, lod, skip_mips);
 }
 
 Value IREmitter::ImageQueryDimension(const Value& handle, const IR::U32& lod,
                                      const IR::U1& skip_mips, TextureInstInfo info) {
-    return Inst(Opcode::ImageQueryDimensions, Flags{info}, handle, lod, skip_mips);
+    return CreateInst(Opcode::ImageQueryDimensions, Flags{info}, handle, lod, skip_mips);
 }
 
 Value IREmitter::ImageQueryLod(const Value& handle, const Value& coords, TextureInstInfo info) {
-    return Inst(Opcode::ImageQueryLod, Flags{info}, handle, coords);
+    return CreateInst(Opcode::ImageQueryLod, Flags{info}, handle, coords);
 }
 
 Value IREmitter::ImageGradient(const Value& handle, const Value& coords,
                                const Value& derivatives_dx, const Value& derivatives_dy,
                                const Value& offset, const F32& lod_clamp, TextureInstInfo info) {
-    return Inst(Opcode::ImageGradient, Flags{info}, handle, coords, derivatives_dx, derivatives_dy,
+    return CreateInst(Opcode::ImageGradient, Flags{info}, handle, coords, derivatives_dx, derivatives_dy,
                 offset, lod_clamp);
 }
 
 Value IREmitter::ImageRead(const Value& handle, const Value& coords, TextureInstInfo info) {
-    return Inst(Opcode::ImageRead, Flags{info}, handle, coords);
+    return CreateInst(Opcode::ImageRead, Flags{info}, handle, coords);
 }
 
 void IREmitter::ImageWrite(const Value& handle, const Value& coords, const Value& color,
                            TextureInstInfo info) {
-    Inst(Opcode::ImageWrite, Flags{info}, handle, coords, color);
+    CreateInst(Opcode::ImageWrite, Flags{info}, handle, coords, color);
 }
 
 // Debug print maps to SPIRV's NonSemantic DebugPrintf instruction
@@ -1596,22 +1596,22 @@ void IREmitter::DebugPrint(const char* fmt, boost::container::small_vector<Value
     }
 
     for (int i = format_args.size(); i < DEBUGPRINT_NUM_FORMAT_ARGS; i++) {
-        args[i] = Inst(Opcode::Void);
+        args[i] = CreateInst(Opcode::Void);
     }
 
     IR::Value fmt_val{fmt};
 
     DebugPrintFlags flags;
     flags.num_args.Assign(format_args.size());
-    Inst(Opcode::DebugPrint, Flags{flags}, fmt_val, args[0], args[1], args[2], args[3]);
+    CreateInst(Opcode::DebugPrint, Flags{flags}, fmt_val, args[0], args[1], args[2], args[3]);
 }
 
 void IREmitter::EmitVertex() {
-    Inst(Opcode::EmitVertex);
+    CreateInst(Opcode::EmitVertex);
 }
 
 void IREmitter::EmitPrimitive() {
-    Inst(Opcode::EmitPrimitive);
+    CreateInst(Opcode::EmitPrimitive);
 }
 
 IR::Inst* IREmitter::CopyInst(const IR::Inst& inst) {

@@ -6,6 +6,7 @@
 #include "common/config.h"
 #include "common/hash.h"
 #include "common/io_file.h"
+#include "common/logging/log.h"
 #include "common/path_util.h"
 #include "shader_recompiler/backend/spirv/emit_spirv.h"
 #include "shader_recompiler/info.h"
@@ -16,6 +17,8 @@
 #include "video_core/renderer_vulkan/vk_pipeline_cache.h"
 #include "video_core/renderer_vulkan/vk_scheduler.h"
 #include "video_core/renderer_vulkan/vk_shader_util.h"
+
+#include <fstream>
 
 extern std::unique_ptr<Vulkan::RendererVulkan> renderer;
 
@@ -398,6 +401,9 @@ vk::ShaderModule PipelineCache::CompileModule(Shader::Info& info,
 
     const auto ir_program = Shader::TranslateProgram(code, pools, info, runtime_info, profile);
     const auto spv = Shader::Backend::SPIRV::EmitSPIRV(profile, runtime_info, ir_program, binding);
+    if (info.pgm_hash == 0xfefebf9f) {
+        LOG_ERROR(Render_Vulkan, "Dumping {} shader {:#x} {}", info.stage, info.pgm_hash, perm_idx);
+    }
     DumpShader(spv, info.pgm_hash, info.stage, perm_idx, "spv");
 
     const auto module = CompileSPV(spv, instance.GetDevice());
